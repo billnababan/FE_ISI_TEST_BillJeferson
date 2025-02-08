@@ -29,23 +29,23 @@ To get started, clone the repository to your local machine:
 
 bash
 Copy
---- git clone https://github.com/billnababan/TodoAppNextjs.git
+### git clone https://github.com/billnababan/TodoAppNextjs.git
 cd TodoAppNextjs
 Technologies Used
---- Frontend: Next.js (TypeScript), TailwindCSS
+### Frontend: Next.js (TypeScript), TailwindCSS
 
----Backend: Next.js API Routes
+### Backend: Next.js API Routes
 
----Database: PostgreSQL
+### Database: PostgreSQL
 
----Authentication: JWT (JSON Web Tokens)
+Authentication: JWT (JSON Web Tokens)
 
 Features
---- Role-Based Access Control:
+Role-Based Access Control:
 
----Lead: Can create, update, and delete tasks. Can assign tasks to team members.
+Lead: Can create, update, and delete tasks. Can assign tasks to team members.
 
---- Team: Can update task status and descriptions.
+Team: Can update task status and descriptions.
 
 Task Management:
 
@@ -63,10 +63,8 @@ Responsive Design:
 
 Built with TailwindCSS for a responsive and user-friendly interface.
 
-Installation Guide
+### Installation Guide
 1. Prerequisites
-Docker and Docker Compose installed on your machine.
-
 Node.js (v18 or higher) and npm installed.
 
 2. Set Up Environment Variables
@@ -74,13 +72,13 @@ Create a .env file in the root directory with the following variables:
 
 env
 Copy
-# Database Configuration
+### Database Configuration
 POSTGRES_USER=your_db_user
 POSTGRES_PASSWORD=your_db_password
 POSTGRES_DB=your_db_name
 DATABASE_URL=postgresql://your_db_user:your_db_password@db:5432/your_db_name
 
-# JWT Configuration
+### JWT Configuration
 JWT_SECRET=your_jwt_secret_key
 
 Start a PostgreSQL database.
@@ -94,15 +92,15 @@ Install dependencies:
 
 bash
 Copy
-npm install
+### npm install
 Start the development server:
 
 bash
 Copy
-npm run dev
+### npm run dev
 Open your browser and navigate to http://localhost:3000.
 
-API Endpoints
+### API Endpoints
 1. Authentication
 Register User: POST /api/auth/register
 
@@ -110,16 +108,12 @@ Login: POST /api/auth/login
 
 2. Task Management
 Create Task: POST /api/tasks (Lead Only)
-
 Get All Tasks: GET /api/tasks
-
 Update Task: PUT /api/tasks/:id (Lead Only)
-
 Delete Task: DELETE /api/tasks/:id (Lead Only)
 
 3. Team-Specific Endpoints
 Get Team Tasks: GET /api/status (Team Only)
-
 Update Task Status: PUT /api/status/:id (Team Only)
 
 ### 1. Create User
@@ -156,7 +150,7 @@ Paste the request body JSON.
 
 Click Send.
 
-2. Login
+### 2. Login
 Endpoint: POST /api/auth/login
 
 Description: Authenticate a user and receive a JWT token.
@@ -191,7 +185,7 @@ Click Send.
 
 Save the token from the response for future requests.
 
-3. Get All Users (Team Members)
+### 3. Get All Users (Team Members)
 Endpoint: GET /api/users?role=team
 
 Description: Fetch all users with the role team.
@@ -218,7 +212,7 @@ Value: Bearer <token> (replace <token> with the token received from login).
 
 Click Send.
 
-4. Create Task (Lead Only)
+### 4. Create Task (Lead Only)
 Endpoint: POST /api/tasks
 
 Description: Create a new task (only accessible by users with the lead role).
@@ -260,7 +254,7 @@ Paste the request body JSON.
 
 Click Send.
 
-5. Get All Tasks
+### 5. Get All Tasks
 Endpoint: GET /api/tasks
 
 Description: Fetch all tasks.
@@ -292,7 +286,7 @@ Value: Bearer <token> (replace <token> with the token received from login).
 
 Click Send.
 
-6. Update Task (Lead Only)
+### 6. Update Task (Lead Only)
 Endpoint: PUT /api/tasks/:id
 
 Description: Update a task (only accessible by users with the lead role).
@@ -334,7 +328,7 @@ Paste the request body JSON.
 
 Click Send.
 
-7. Delete Task (Lead Only)
+### 7. Delete Task (Lead Only)
 Endpoint: DELETE /api/tasks/:id
 
 Description: Delete a task (only accessible by users with the lead role).
@@ -358,7 +352,7 @@ Value: Bearer <token> (replace <token> with the token received from login).
 
 Click Send.
 
-8. Get Team Tasks (Team Only)
+### 8. Get Team Tasks (Team Only)
 Endpoint: GET /api/status
 
 Description: Fetch tasks assigned to the logged-in team member.
@@ -390,7 +384,7 @@ Value: Bearer <token> (replace <token> with the token received from login).
 
 Click Send.
 
-9. Update Task Status (Team Only)
+### 9. Update Task Status (Team Only)
 Endpoint: PUT /api/status/:id
 
 Description: Update the status and description of a task (only accessible by the assigned team member).
