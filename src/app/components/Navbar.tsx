@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { FaBars, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext"; // ✅ Gunakan hanya import ini
+import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 
 interface NavbarProps {
@@ -9,37 +9,40 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onMenuButtonClick }) => {
-  const { user, logout } = useAuth(); // ✅ Ambil logout dari useAuth
+  const { user, logout } = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        await logout(); // ✅ Pastikan logout dari context dipanggil
+        await logout();
       }
 
-      // Bersihkan localStorage
       localStorage.removeItem("role");
       localStorage.removeItem("token");
       localStorage.removeItem("uuid");
 
       // Redirect ke halaman login
-      router.push("/pages/login"); // ✅ Pastikan path benar
+      router.push("/pages/login");
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
   return (
-    <nav className="bg-gray-900 shadow-md">
+    <nav className="bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <button onClick={onMenuButtonClick} className="text-white hover:text-gray-600 focus:outline-none lg:hidden" aria-label="Open menu">
+            <button
+              onClick={onMenuButtonClick}
+              className="text-white hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 lg:hidden"
+              aria-label="Open menu"
+            >
               <FaBars size={24} />
             </button>
-            <Link href="/dashboard" className="ml-4 text-xl font-semibold text-white hover:text-gray-600">
+            <Link href="/dashboard" className="ml-4 text-xl font-semibold text-white hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50">
               Dashboard
             </Link>
           </div>

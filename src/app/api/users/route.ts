@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
-// import { authenticate } from "@/lib/authMiddleware"; // Import middleware
 
 export const GET = async (req: NextRequest) => {
   try {

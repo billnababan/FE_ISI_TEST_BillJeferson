@@ -1,9 +1,7 @@
-// src/app/api/tasks/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { authenticate } from "@/lib/authMiddleware"; // Import middleware
+import { authenticate } from "@/lib/authMiddleware";
 
-// 🟢 GET: Semua pengguna bisa melihat task
 export const GET = async () => {
   try {
     const result = await query("SELECT * FROM tasks");
@@ -17,7 +15,7 @@ export const GET = async () => {
 // 🟠 POST: Hanya "lead" yang bisa menambah task
 export const POST = async (req: NextRequest) => {
   const auth = authenticate(req, ["lead"]);
-  if (auth instanceof NextResponse) return auth; // Jika gagal auth, return response error
+  if (auth instanceof NextResponse) return auth;
 
   try {
     const { title, description, assigned_to } = await req.json();
@@ -34,7 +32,6 @@ export const POST = async (req: NextRequest) => {
 
     const result = await query("INSERT INTO tasks (title, description, status, assigned_to, created_by, created_at) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *", [title, description, status, assignedToId, createdBy]);
 
-    // Insert log
     await query("INSERT INTO logs (task_id, action, performed_by, description, timestamp) VALUES ($1, $2, $3, $4, NOW())", [
       result.rows[0].id,
       "CREATE",
@@ -48,5 +45,3 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 };
-
-// 🟠 PUT: Hanya "lead" yang bisa memperbarui task

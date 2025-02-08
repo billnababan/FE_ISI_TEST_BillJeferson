@@ -9,7 +9,7 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const { login } = useAuth(); // Gunakan fungsi `login` dari `useAuth`
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,6 +30,10 @@ const LoginPage: React.FC = () => {
       localStorage.setItem("role", role); // Simpan role juga!
       localStorage.setItem("uuid", uuid); // Simpan role juga!
 
+      // Panggil fungsi `login` dari `useAuth` untuk menyimpan data pengguna
+      await login(email, password);
+
+      // Arahkan pengguna berdasarkan role
       if (role === "lead") {
         router.push("/pages/tasks");
       } else if (role === "team") {

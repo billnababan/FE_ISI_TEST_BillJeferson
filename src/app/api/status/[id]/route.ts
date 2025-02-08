@@ -1,41 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
-import { authenticate } from "@/lib/authMiddleware"; // Import middleware
+import { authenticate } from "@/lib/authMiddleware";
 
-// 🟢 PATCH: Team bisa merubah status dan keterangan task yang diberikan oleh Lead
-export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
+// PUT: Update task status and description
+export const PUT = async (req: NextRequest) => {
   const auth = authenticate(req, ["team"]);
-  if (auth instanceof NextResponse) return auth; // Jika gagal auth, return response error
+  if (auth instanceof NextResponse) return auth;
 
   try {
     const { status, description } = await req.json();
-    const taskId = parseInt(params.id); // Menunggu params.id
+    const url = new URL(req.url);
+    const taskId = url.pathname.split("/").pop();
 
-    // Validasi status task yang diterima
-    const validStatuses = ["Not Started", "On Progress", "Done", "Reject"];
-    if (!validStatuses.includes(status)) {
-      return NextResponse.json({ message: "Invalid status value" }, { status: 400 });
+    const taskCheck = await query("SELECT * FROM tasks WHERE id = $1 AND assigned_to = $2", [taskId, auth.uuid]);
+
+    if (taskCheck.rowCount === 0) {
+      return NextResponse.json({ message: "Task not found or not assigned to you" }, { status: 404 });
     }
 
-    // Cari task berdasarkan ID
-    const taskResult = await query("SELECT * FROM tasks WHERE id = $1", [taskId]);
-    if (taskResult.rowCount === 0) {
-      return NextResponse.json({ message: "Task not found" }, { status: 404 });
-    }
+    const result = await query(
+      `UPDATE tasks 
+       SET status = $1, description = $2, updated_at = NOW() 
+       WHERE id = $3 AND assigned_to = $4 
+       RETURNING *`,
+      [status, description, taskId, auth.uuid]
+    );
 
-    const task = taskResult.rows[0];
-
-    console.log(auth.uuid);
-    // Pastikan task ini ditugaskan ke user yang sedang melakukan request
-    if (task.assigned_to !== auth.uuid) {
-      return NextResponse.json({ message: "You are not assigned to this task" }, { status: 403 });
-    }
-
-    // Update task dengan status dan deskripsi baru
-    const result = await query("UPDATE tasks SET status = $1, description = $2, updated_at = NOW() WHERE id = $3 RETURNING *", [status, description, taskId]);
-
-    // Insert log
-    await query("INSERT INTO logs (task_id, action, performed_by, description, timestamp) VALUES ($1, $2, $3, $4, NOW())", [taskId, "UPDATE", auth.uuid, `Task ID ${taskId} status changed to '${status}' and description updated.`]);
+    await query(
+      `INSERT INTO logs (task_id, action, performed_by, description) 
+       VALUES ($1, $2, $3, $4)`,
+      [taskId, "UPDATE", auth.uuid, `Task status updated to ${status} by team member`]
+    );
 
     return NextResponse.json(result.rows[0], { status: 200 });
   } catch (error) {
